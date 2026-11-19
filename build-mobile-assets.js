@@ -47,8 +47,12 @@ if (fs.existsSync(apiSrc)) {
 const documentsSrc = path.join(srcDir, 'documents');
 const studyPdfSrc = path.join(documentsSrc, 'statistics-notes-chapter-ordered-v2.pdf');
 const rootStudyPdfSrc = path.join(srcDir, 'statistics-notes-chapter-ordered-v2.pdf');
+const rootCppPdfSrc = path.join(srcDir, 'Attractive_CPP_Programming_Notes.pdf');
 if (!fs.existsSync(studyPdfSrc) && !fs.existsSync(rootStudyPdfSrc)) {
   throw new Error(`Required study PDF is missing from ${documentsSrc} and ${rootStudyPdfSrc}`);
+}
+if (!fs.existsSync(rootCppPdfSrc)) {
+  throw new Error(`Required C++ notes PDF is missing from ${rootCppPdfSrc}`);
 }
 
 const documentsDest = path.join(destDir, 'documents');
@@ -61,11 +65,16 @@ if (fs.existsSync(documentsSrc)) {
 if (!fs.existsSync(path.join(documentsDest, 'statistics-notes-chapter-ordered-v2.pdf'))) {
   fs.copyFileSync(rootStudyPdfSrc, path.join(documentsDest, 'statistics-notes-chapter-ordered-v2.pdf'));
 }
+const cppPdfOutput = path.join(documentsDest, 'Attractive_CPP_Programming_Notes.pdf');
+fs.copyFileSync(rootCppPdfSrc, cppPdfOutput);
 console.log('Copied documents/ -> www/documents/');
 
 const studyPdfOutput = path.join(documentsDest, 'statistics-notes-chapter-ordered-v2.pdf');
 if (!fs.existsSync(studyPdfOutput)) {
   throw new Error(`Study PDF was not copied to the Vercel output: ${studyPdfOutput}`);
+}
+if (!fs.existsSync(cppPdfOutput) || fs.statSync(cppPdfOutput).size === 0) {
+  throw new Error(`C++ notes PDF was not copied to the Vercel output: ${cppPdfOutput}`);
 }
 
 console.log('Mobile assets preparation complete!');
